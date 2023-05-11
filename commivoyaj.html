@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+
+/*
+    0   1   2   3   
+    --------------
+0   0   8   4   10  
+ 
+1   8   0   7   5
+ 
+2   4   7   0   3
+
+3   10  5   3   0
+*/
+
+function solve(matrix) {
+    const n = matrix.length;
+    const solutions = {};
+
+    function path(visited, summ) {
+        const current_city = visited.at(-1);
+        let is_last_city = true;
+
+        for (let [city_index, to_city] of matrix[current_city].entries()) {
+            if (!visited.includes(city_index)) {
+                path(visited.concat(city_index), summ + to_city);
+                is_last_city = false;
+            }
+        }
+
+        if (is_last_city) {
+            const total_amount = summ + matrix[current_city][0];
+
+            solutions[total_amount] = visited.concat(0);
+        }
+    }
+
+    path([0], 0);
+
+    let min;
+
+    for (let summ in solutions ) {
+        if (min == undefined || summ < min) min = summ;
+    }
+
+    return {[min]: solutions[min]};
+}
+
+const matrix = [
+    [0,8,4,10],
+    [8,0,7,5],
+    [4,7,0,3],
+    [10,5,3,0]
+];
+
+const solution = solve(matrix);
+
+console.log(solution);
+
+</script>
+
+</body>
+</html>
